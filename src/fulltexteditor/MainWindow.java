@@ -38,6 +38,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
+        statusBar = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newButton = new javax.swing.JMenuItem();
@@ -53,8 +54,18 @@ public class MainWindow extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         textArea.setColumns(20);
+        textArea.setFont(new java.awt.Font("Lucida Console", 0, 14)); // NOI18N
         textArea.setRows(5);
+        textArea.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        textArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                textAreaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(textArea);
+
+        statusBar.setEditable(false);
+        statusBar.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         fileMenu.setText("File");
         fileMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -141,11 +152,15 @@ public class MainWindow extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
+            .addComponent(statusBar, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 632, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(statusBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -157,6 +172,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
         textArea.setText("");
+        statusBar.setText("New File Opened");
     }//GEN-LAST:event_newButtonActionPerformed
 
     private void openButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openButtonActionPerformed
@@ -164,19 +180,18 @@ public class MainWindow extends javax.swing.JFrame {
             int value = choose.showOpenDialog(this);
             
             if (value == JFileChooser.APPROVE_OPTION){
+                
                 try{
-                Scanner reader = new Scanner(choose.getSelectedFile());
-                textArea.setText("");
-                while(reader.hasNext())
-                {
-                    textArea.append(reader.nextLine()+"\n");
+                    Scanner reader = new Scanner(choose.getSelectedFile());
+                    textArea.setText("");
+                    while(reader.hasNext())
+                    {
+                        textArea.append(reader.nextLine()+"\n");
+                    }
+                    reader.close();
+                    statusBar.setText("Successfully Loaded " + choose.getSelectedFile().getAbsolutePath());
                 }
-                reader.close();
-                }
-                catch(Exception E)
-                {
-
-                }
+                catch(Exception E){}              
             }
     }//GEN-LAST:event_openButtonActionPerformed
 
@@ -194,6 +209,7 @@ public class MainWindow extends javax.swing.JFrame {
             {
                 
             }
+            statusBar.setText("Successfully Saved");
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -203,58 +219,79 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void findButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findButtonActionPerformed
       
-        String toSearch = "";
-        try{
-             toSearch = JOptionPane.showInputDialog("Find:");
-        }
-        catch(Exception E){
-            
-        }
-        String Buffer = "";
-        Buffer = textArea.getText();
-        int p1=0,p0=0;
+        String toSearch;
+        String Buffer;
+        int p1=0,p0;
         Highlighter highlighter = textArea.getHighlighter();
         HighlightPainter painter = 
                new DefaultHighlighter.DefaultHighlightPainter(Color.pink);
-        while(p0!=-1){
-             p0 = Buffer.indexOf(toSearch,p1);
-             
-            if(p0!=-1){
-                 p1 = p0 + toSearch.length();
-                try{
-                    
-                highlighter.addHighlight(p0, p1, painter );
-                }
-                catch(Exception BE){
-                    JOptionPane.showMessageDialog(null,"Not Found","Not Found",JOptionPane.ERROR_MESSAGE);
-                    break;
-                }
-                  
-            }
-           else
-            break;
-        }
         
+        //Buffer is Current State of TextArea
+        Buffer = textArea.getText();
+        toSearch = JOptionPane.showInputDialog("Find:");
+        
+        //If User Presses cancel
+        if(toSearch == null)
+            return;
+        
+         p0 = Buffer.indexOf(toSearch,p1);
+         
+         //If string is Not Found
+         if(p0==-1)
+             JOptionPane.showMessageDialog(null,"Not Found","Not Found",JOptionPane.ERROR_MESSAGE);
+         
+        while(p0!=-1)
+        {
+            p1 = p0 + toSearch.length();
+            try{               
+            highlighter.addHighlight(p0, p1, painter );
+            }
+            catch(Exception BE){ break; }     
+
+            p0 = Buffer.indexOf(toSearch,p1);
+        }
+        statusBar.setText("");
         
     }//GEN-LAST:event_findButtonActionPerformed
 
     private void replaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceButtonActionPerformed
         String toReplace,newString; 
+        String Buffer;
         toReplace = JOptionPane.showInputDialog("Replace:");
         newString = JOptionPane.showInputDialog("Replace With:");
-        String Buffer = "";
+        
+        //If User Cancels
+        
+        if(toReplace == null || newString == null)
+            return;
+        
         Buffer = textArea.getText();
+        
         textArea.setText(Buffer.replaceFirst(toReplace, newString));
+        statusBar.setText("Successfully Replaced");
+        
     }//GEN-LAST:event_replaceButtonActionPerformed
 
     private void replaceAllButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceAllButonActionPerformed
+       
         String toReplace,newString; 
+        String Buffer;
         toReplace = JOptionPane.showInputDialog("Replace:");
         newString = JOptionPane.showInputDialog("Replace With:");
-        String Buffer = "";
+        
+        //If User Cancels
+        if(toReplace == null || newString == null)
+            return;
+      
         Buffer = textArea.getText();
         textArea.setText(Buffer.replace(toReplace, newString));
+        statusBar.setText("Successfully Replaced");
+        
     }//GEN-LAST:event_replaceAllButonActionPerformed
+
+    private void textAreaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textAreaMouseClicked
+            
+    }//GEN-LAST:event_textAreaMouseClicked
 
     /**
      * @param args the command line arguments
@@ -304,6 +341,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem replaceAllButon;
     private javax.swing.JMenuItem replaceButton;
     private javax.swing.JMenuItem saveButton;
+    private javax.swing.JTextField statusBar;
     private javax.swing.JTextArea textArea;
     // End of variables declaration//GEN-END:variables
 }
