@@ -6,8 +6,13 @@
 package fulltexteditor;
 
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.text.DefaultHighlighter;
@@ -23,6 +28,7 @@ public class MainWindow extends javax.swing.JFrame {
     /**
      * Creates new form MainWindow
      */
+    JFileChooser choose;
     public MainWindow() {
         initComponents();
     }
@@ -43,12 +49,16 @@ public class MainWindow extends javax.swing.JFrame {
         fileMenu = new javax.swing.JMenu();
         newButton = new javax.swing.JMenuItem();
         saveButton = new javax.swing.JMenuItem();
+        saveAsButton = new javax.swing.JMenuItem();
         openButton = new javax.swing.JMenuItem();
         exitButton = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         findButton = new javax.swing.JMenuItem();
         replaceButton = new javax.swing.JMenuItem();
         replaceAllButon = new javax.swing.JMenuItem();
+        executeMenu = new javax.swing.JMenu();
+        compileButton = new javax.swing.JMenuItem();
+        openCMDButton = new javax.swing.JMenuItem();
         connectMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -91,6 +101,14 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
         fileMenu.add(saveButton);
+
+        saveAsButton.setText("Save as");
+        saveAsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveAsButtonActionPerformed(evt);
+            }
+        });
+        fileMenu.add(saveAsButton);
 
         openButton.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         openButton.setText("Open");
@@ -143,6 +161,28 @@ public class MainWindow extends javax.swing.JFrame {
 
         jMenuBar1.add(editMenu);
 
+        executeMenu.setText("Execute");
+
+        compileButton.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, 0));
+        compileButton.setText("Compile");
+        compileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                compileButtonActionPerformed(evt);
+            }
+        });
+        executeMenu.add(compileButton);
+
+        openCMDButton.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F9, 0));
+        openCMDButton.setText("Open cmd");
+        openCMDButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openCMDButtonActionPerformed(evt);
+            }
+        });
+        executeMenu.add(openCMDButton);
+
+        jMenuBar1.add(executeMenu);
+
         connectMenu.setText("Connect");
         jMenuBar1.add(connectMenu);
 
@@ -153,12 +193,12 @@ public class MainWindow extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(statusBar, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 632, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -171,6 +211,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_fileMenuActionPerformed
 
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
+        choose = null;
         textArea.setText("");
         statusBar.setText("New File Opened");
     }//GEN-LAST:event_newButtonActionPerformed
@@ -195,8 +236,8 @@ public class MainWindow extends javax.swing.JFrame {
             }
     }//GEN-LAST:event_openButtonActionPerformed
 
-    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-         JFileChooser choose = new JFileChooser();
+    private void saveAsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsButtonActionPerformed
+        choose = new JFileChooser();
         int value = choose.showSaveDialog(this);
         
         if (value == JFileChooser.APPROVE_OPTION){
@@ -211,7 +252,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
             statusBar.setText("Successfully Saved");
         }
-    }//GEN-LAST:event_saveButtonActionPerformed
+    }//GEN-LAST:event_saveAsButtonActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
         System.exit(0);
@@ -293,6 +334,67 @@ public class MainWindow extends javax.swing.JFrame {
             
     }//GEN-LAST:event_textAreaMouseClicked
 
+    private void compileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compileButtonActionPerformed
+        
+       if(choose == null)
+            saveAsButtonActionPerformed(evt);
+        Runtime rt = Runtime.getRuntime();
+        String FilePath = choose.getSelectedFile().getAbsolutePath();
+        String compilePath = "javac " + FilePath ;
+
+
+        try {
+            ProcessBuilder builder = new ProcessBuilder(
+            "cmd.exe", "/c",compilePath);
+        
+            builder.redirectErrorStream(true);
+            Process p = builder.start();
+            BufferedReader r = 
+                    new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while (true) {
+                line = r.readLine();
+                if (line == null) 
+                    break; 
+                System.out.println(line);
+            }
+
+        }
+        catch (IOException e) {
+        e.printStackTrace();
+        }
+     
+        
+    }//GEN-LAST:event_compileButtonActionPerformed
+
+    private void openCMDButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openCMDButtonActionPerformed
+        
+        try {
+            Runtime.getRuntime().exec(new String[]{"cmd.exe","/c","start"});
+        } catch (IOException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_openCMDButtonActionPerformed
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        if(choose == null)
+        {
+            saveAsButtonActionPerformed(evt);
+            return;
+        }
+        try{
+            PrintWriter writer = new PrintWriter(choose.getSelectedFile());
+            writer.print(textArea.getText());
+            writer.close();
+            }
+            catch(Exception E)
+            {
+                
+            }
+            statusBar.setText("Successfully Saved");
+    }//GEN-LAST:event_saveButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -329,8 +431,10 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem compileButton;
     private javax.swing.JMenu connectMenu;
     private javax.swing.JMenu editMenu;
+    private javax.swing.JMenu executeMenu;
     private javax.swing.JMenuItem exitButton;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem findButton;
@@ -338,10 +442,21 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuItem newButton;
     private javax.swing.JMenuItem openButton;
+    private javax.swing.JMenuItem openCMDButton;
     private javax.swing.JMenuItem replaceAllButon;
     private javax.swing.JMenuItem replaceButton;
+    private javax.swing.JMenuItem saveAsButton;
     private javax.swing.JMenuItem saveButton;
     private javax.swing.JTextField statusBar;
     private javax.swing.JTextArea textArea;
     // End of variables declaration//GEN-END:variables
 }
+/*
+public class MAAAA
+{
+    public static void main(String args[])
+    {
+        System.out.prinln("Sdfsfs\n");
+    }
+}
+*/
