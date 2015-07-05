@@ -15,6 +15,8 @@ public class FullTextEditor {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+       // MyServer m = new MyServer();
         MainWindow MW = new MainWindow();
         MW.setVisible(true);
         MW.setDefaultCloseOperation(MainWindow.EXIT_ON_CLOSE);

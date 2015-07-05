@@ -18,7 +18,6 @@ import javax.swing.JOptionPane;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.Highlighter.HighlightPainter;
-
 /**
  *
  * @author Abhishek
@@ -29,6 +28,8 @@ public class MainWindow extends javax.swing.JFrame {
      * Creates new form MainWindow
      */
     JFileChooser choose;
+    Thread serverThread;
+            
     public MainWindow() {
         initComponents();
     }
@@ -42,11 +43,13 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea = new javax.swing.JTextArea();
         statusBar = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         textArea2 = new javax.swing.JTextArea();
+        jTextField1 = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newButton = new javax.swing.JMenuItem();
@@ -64,6 +67,9 @@ public class MainWindow extends javax.swing.JFrame {
         openCMDButton = new javax.swing.JMenuItem();
         runButton = new javax.swing.JMenuItem();
         connectMenu = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -84,8 +90,11 @@ public class MainWindow extends javax.swing.JFrame {
         textArea2.setEditable(false);
         textArea2.setColumns(20);
         textArea2.setRows(5);
-        textArea2.setMaximumSize(new java.awt.Dimension(60, 80));
         jScrollPane2.setViewportView(textArea2);
+
+        jTextField1.setEditable(false);
+        jTextField1.setFont(new java.awt.Font("Lucida Fax", 0, 12)); // NOI18N
+        jTextField1.setText("Build Output");
 
         fileMenu.setText("File");
         fileMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -213,6 +222,34 @@ public class MainWindow extends javax.swing.JFrame {
         jMenuBar1.add(executeMenu);
 
         connectMenu.setText("Connect");
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem1.setText("Chat");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        connectMenu.add(jMenuItem1);
+
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem2.setText("Launch Server");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        connectMenu.add(jMenuItem2);
+
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem3.setText("Stop Server");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        connectMenu.add(jMenuItem3);
+
         jMenuBar1.add(connectMenu);
 
         setJMenuBar(jMenuBar1);
@@ -222,15 +259,18 @@ public class MainWindow extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(statusBar, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jTextField1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -477,6 +517,57 @@ public class MainWindow extends javax.swing.JFrame {
      
     }//GEN-LAST:event_runButtonActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        MyChatApp myApp = new MyChatApp();
+        myApp.setVisible(true);
+        myApp.setDefaultCloseOperation(MyChatApp.EXIT_ON_CLOSE);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        
+        if(serverThread!=null)
+        {
+            statusBar.setText("Port Busy");        
+            return;
+        }
+            
+        serverThread = new Thread(new Runnable()
+        {
+            public void run()
+            {
+                //to avoid blockage of the main 
+                   MyServer server = new MyServer();
+                   
+                   String message = "Server Started "+ (new MyServer().getSocket()).toString();
+                   
+                   System.out.println("Hello");
+                   if(server!=null)
+                   statusBar.setText(message);
+                   else
+                   {
+                       statusBar.setText("Oops something went wrong");
+                       return;
+                   }
+            }
+            
+        });
+        
+        serverThread.start();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        
+        if(serverThread!=null)
+        {
+            serverThread.interrupt();
+        }
+        statusBar.setText("Stopped");
+        
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -521,9 +612,14 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem findButton;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JMenuItem newButton;
     private javax.swing.JMenuItem openButton;
     private javax.swing.JMenuItem openCMDButton;
@@ -537,12 +633,3 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTextArea textArea2;
     // End of variables declaration//GEN-END:variables
 }
-/*
-public class MAAAA
-{
-    public static void main(String args[])
-    {
-        System.out.prinln("Sdfsfs\n");
-    }
-}
-*/
