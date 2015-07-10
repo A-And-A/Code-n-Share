@@ -29,9 +29,10 @@ public class MainWindow extends javax.swing.JFrame {
      */
     JFileChooser choose;
     Thread serverThread;
+    MyServer server;
             
     public MainWindow() {
-        initComponents();
+        initComponents();  
     }
 
     /**
@@ -519,30 +520,33 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        MyChatApp myApp = new MyChatApp();
-        myApp.setVisible(true);
-        myApp.setDefaultCloseOperation(MyChatApp.EXIT_ON_CLOSE);
+       // MyChatApp myApp = new MyChatApp();
+        //myApp.setVisible(true);
+        //myApp.setDefaultCloseOperation(MyChatApp.EXIT_ON_CLOSE);
+        
+        MyClient newCLient = new MyClient();
+        
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
         
-        if(serverThread!=null)
+        if(server!=null)
         {
             statusBar.setText("Port Busy");        
             return;
         }
-            
+       
+        
         serverThread = new Thread(new Runnable()
         {
             public void run()
             {
                 //to avoid blockage of the main 
-                   MyServer server = new MyServer();
+                   server = new MyServer();
+                   String message = "Server Started "+ (server.getSocket()).toString();
                    
-                   String message = "Server Started "+ (new MyServer().getSocket()).toString();
-                   
-                   System.out.println("Hello");
+                   //System.out.println("Hello");
                    if(server!=null)
                    statusBar.setText(message);
                    else
@@ -558,14 +562,9 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        // TODO add your handling code here:
+       
         
-        if(serverThread!=null)
-        {
-            serverThread.interrupt();
-        }
-        statusBar.setText("Stopped");
-        
+       
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**

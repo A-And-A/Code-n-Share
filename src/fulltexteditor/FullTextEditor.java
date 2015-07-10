@@ -16,10 +16,9 @@ public class FullTextEditor {
      */
     public static void main(String[] args) {
         
-       // MyServer m = new MyServer();
-        MainWindow MW = new MainWindow();
-        MW.setVisible(true);
-        MW.setDefaultCloseOperation(MainWindow.EXIT_ON_CLOSE);
+       MainWindow MW = new MainWindow();
+       MW.setVisible(true);
+       MW.setDefaultCloseOperation(MainWindow.EXIT_ON_CLOSE);
     }
     
 }

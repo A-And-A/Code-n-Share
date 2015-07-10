@@ -25,6 +25,7 @@ public class MyServer {
     public final static int PORT=10;
     public final static String UPDATE_USERS="updateuserslist:";
     public final static String LOGOUT_MESSAGE="@@logoutme@@:";
+    Thread t;
     
     public MyServer()
     {
@@ -35,13 +36,14 @@ public class MyServer {
 	{
 	s=ss.accept();
 	Runnable r=new MyThread(s,al,users);
-	Thread t=new Thread(r);
+        t=new Thread(r);
 	t.start();
 //	System.out.println("Total alive clients : "+ss.);
 	}
         }catch(Exception e){System.err.println("Server constructor"+e);}
     }
     
+   
     public ServerSocket getSocket()
     {
         return ss;
