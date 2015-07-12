@@ -14,7 +14,9 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.WindowConstants;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.Highlighter.HighlightPainter;
@@ -45,12 +47,17 @@ public class MainWindow extends javax.swing.JFrame {
     private void initComponents() {
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        textArea = new javax.swing.JTextArea();
         statusBar = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         textArea2 = new javax.swing.JTextArea();
         jTextField1 = new javax.swing.JTextField();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        textArea = new javax.swing.JTextArea();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        chatArea = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newButton = new javax.swing.JMenuItem();
@@ -58,6 +65,7 @@ public class MainWindow extends javax.swing.JFrame {
         saveButton = new javax.swing.JMenuItem();
         saveAsButton = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        newWindowButton = new javax.swing.JMenuItem();
         exitButton = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         findButton = new javax.swing.JMenuItem();
@@ -74,17 +82,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        textArea.setColumns(20);
-        textArea.setFont(new java.awt.Font("Lucida Console", 0, 14)); // NOI18N
-        textArea.setRows(5);
-        textArea.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        textArea.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                textAreaMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(textArea);
-
         statusBar.setEditable(false);
         statusBar.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
@@ -96,6 +93,40 @@ public class MainWindow extends javax.swing.JFrame {
         jTextField1.setEditable(false);
         jTextField1.setFont(new java.awt.Font("Lucida Fax", 0, 12)); // NOI18N
         jTextField1.setText("Build Output");
+
+        textArea.setColumns(20);
+        textArea.setRows(5);
+        jScrollPane3.setViewportView(textArea);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Main", jPanel1);
+
+        chatArea.setColumns(20);
+        chatArea.setRows(5);
+        jScrollPane4.setViewportView(chatArea);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Chat", jPanel2);
 
         fileMenu.setText("File");
         fileMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -139,6 +170,14 @@ public class MainWindow extends javax.swing.JFrame {
         });
         fileMenu.add(saveAsButton);
         fileMenu.add(jSeparator1);
+
+        newWindowButton.setText("New Window");
+        newWindowButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newWindowButtonActionPerformed(evt);
+            }
+        });
+        fileMenu.add(newWindowButton);
 
         exitButton.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, java.awt.event.InputEvent.SHIFT_MASK));
         exitButton.setText("Exit");
@@ -260,14 +299,14 @@ public class MainWindow extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(statusBar, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 709, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jScrollPane2)
             .addComponent(jTextField1)
+            .addComponent(jTabbedPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -403,10 +442,6 @@ public class MainWindow extends javax.swing.JFrame {
         
     }//GEN-LAST:event_replaceAllButonActionPerformed
 
-    private void textAreaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_textAreaMouseClicked
-            
-    }//GEN-LAST:event_textAreaMouseClicked
-
     private void compileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compileButtonActionPerformed
         
         textArea2.setText("");
@@ -517,19 +552,13 @@ public class MainWindow extends javax.swing.JFrame {
         }
      
     }//GEN-LAST:event_runButtonActionPerformed
-
+    
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-       // MyChatApp myApp = new MyChatApp();
-        //myApp.setVisible(true);
-        //myApp.setDefaultCloseOperation(MyChatApp.EXIT_ON_CLOSE);
-        
-        MyClient newCLient = new MyClient();
-        
+        MyClient newCLient = new MyClient(this);       
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        // TODO add your handling code here:
+    
         
         if(server!=null)
         {
@@ -545,8 +574,6 @@ public class MainWindow extends javax.swing.JFrame {
                 //to avoid blockage of the main 
                    server = new MyServer();
                    String message = "Server Started "+ (server.getSocket()).toString();
-                   
-                   //System.out.println("Hello");
                    if(server!=null)
                    statusBar.setText(message);
                    else
@@ -566,6 +593,12 @@ public class MainWindow extends javax.swing.JFrame {
         
        
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void newWindowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newWindowButtonActionPerformed
+        MainWindow MW2 = new MainWindow();
+        MW2.setVisible(true);
+        MW2.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+    }//GEN-LAST:event_newWindowButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -601,8 +634,17 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
     }
+    public String getText()
+    {
+        return textArea.getText();
+    }
+    public void toChatWindow(String STR)
+    {
+        chatArea.setText(STR);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea chatArea;
     private javax.swing.JMenuItem compileButton;
     private javax.swing.JMenu connectMenu;
     private javax.swing.JMenu editMenu;
@@ -614,12 +656,17 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPopupMenu jPopupMenu1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JMenuItem newButton;
+    private javax.swing.JMenuItem newWindowButton;
     private javax.swing.JMenuItem openButton;
     private javax.swing.JMenuItem openCMDButton;
     private javax.swing.JMenuItem replaceAllButon;

@@ -45,11 +45,15 @@ public class MyThread implements Runnable{
             do
             {
             s1=dis.readUTF();
-            if(s1.toLowerCase().equals(MyServer.LOGOUT_MESSAGE)) break;
-    //	System.out.println("received from "+s.getPort());
-            tellEveryOne(username+" said: "+" : "+s1);
-            }
-            while(true);
+            if(s1.toLowerCase().equals(MyServer.LOGOUT_MESSAGE))
+                break;
+            else if(s1.startsWith(MyServer.TO_CHAT)) {
+                tellEveryOne(s1);
+                }
+            else
+                tellEveryOne(username + " Said: " + " : " + s1);
+            } while(true);
+            
             DataOutputStream tdos=new DataOutputStream(s.getOutputStream());
             tdos.writeUTF(MyServer.LOGOUT_MESSAGE);
             tdos.flush();

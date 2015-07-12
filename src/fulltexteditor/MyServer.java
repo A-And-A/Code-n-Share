@@ -23,8 +23,9 @@ public class MyServer {
     Socket s;
     
     public final static int PORT=10;
-    public final static String UPDATE_USERS="updateuserslist:";
-    public final static String LOGOUT_MESSAGE="@@logoutme@@:";
+    public final static String UPDATE_USERS = "updateuserslist:";
+    public final static String LOGOUT_MESSAGE = "@@logoutme@@:";
+    public final static String TO_CHAT = "@@tochat@@";
     Thread t;
     
     public MyServer()
@@ -38,7 +39,6 @@ public class MyServer {
 	Runnable r=new MyThread(s,al,users);
         t=new Thread(r);
 	t.start();
-//	System.out.println("Total alive clients : "+ss.);
 	}
         }catch(Exception e){System.err.println("Server constructor"+e);}
     }
