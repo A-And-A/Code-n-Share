@@ -33,20 +33,26 @@ public class MyServer {
         try{
 	ss=new ServerSocket(PORT);
 	System.out.println("Server Started "+ss);
-	while(true)
-	{
-	s=ss.accept();
-	Runnable r=new MyThread(s,al,users);
-        t=new Thread(r);
-	t.start();
-	}
+            while(true)
+            {
+                s=ss.accept();
+                Runnable r=new MyThread(s,al,users);
+                t=new Thread(r);
+                t.start();
+            }
         }catch(Exception e){System.err.println("Server constructor"+e);}
     }
     
+    
+    void plzClose()
+    {
+        
+    }
    
     public ServerSocket getSocket()
     {
         return ss;
+        
     }
     
 }
