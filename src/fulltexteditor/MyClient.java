@@ -20,6 +20,7 @@ class MyClient implements ActionListener
     DataInputStream dis;
     DataOutputStream dos;
     MainWindow MW;
+    String ipAddress;
 
     JButton sendButton, logoutButton,loginButton, exitButton,sendCodeButton;
     JFrame chatWindow;
@@ -183,7 +184,8 @@ class MyClient implements ActionListener
     public void clientChat(String uname)
     {
     try{
-         s=new Socket(InetAddress.getLocalHost(),MyServer.PORT);
+         //InetAddress address = InetAddress.getByAddress("14.139.251.107".getBytes());
+         s=new Socket(ipAddress,MyServer.PORT);
          dis=new DataInputStream(s.getInputStream());
          dos=new DataOutputStream(s.getOutputStream());
          ClientThread ct=new ClientThread(dis,this,MW);
@@ -201,6 +203,12 @@ class MyClient implements ActionListener
     public MyClient(MainWindow mw)
     {
             displayGUI();
+            ipAddress = null;
             MW = mw;
+    }
+    
+    public void getIP(String s)
+    {
+        ipAddress = s;
     }
 }

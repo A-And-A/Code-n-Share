@@ -22,15 +22,17 @@ public class MyServer {
     ServerSocket ss;
     Socket s;
     
-    public final static int PORT=10;
+    public final static int PORT=5000;
     public final static String UPDATE_USERS = "updateuserslist:";
     public final static String LOGOUT_MESSAGE = "@@logoutme@@:";
     public final static String TO_CHAT = "@@tochat@@";
+    
     Thread t;
     
     public MyServer(MainWindow MW)
     {
         try{
+       
 	ss=new ServerSocket(PORT);
 	MW.toStatusBar("Server Started "+ss);
             while(true)
@@ -55,7 +57,7 @@ public class MyServer {
     public ServerSocket getSocket()
     {
         return ss;
-        
     }
+   
     
 }

@@ -37,9 +37,13 @@ public class MainWindow extends javax.swing.JFrame {
     JFileChooser choose;
     Thread serverThread;
     MyServer server;
+    String ipAddress,portAddress;
+    boolean flag;
             
     public MainWindow() {
         initComponents();  
+        server = null;
+        flag = false;
         codeArea.registerKeyboardAction(new AutoIndentAction(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_FOCUSED);
     }
 
@@ -84,7 +88,6 @@ public class MainWindow extends javax.swing.JFrame {
         connectMenu = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(77, 75, 85));
@@ -302,15 +305,6 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
         connectMenu.add(jMenuItem2);
-
-        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem3.setText("Stop Server");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
-            }
-        });
-        connectMenu.add(jMenuItem3);
 
         jMenuBar1.add(connectMenu);
 
@@ -577,11 +571,18 @@ public class MainWindow extends javax.swing.JFrame {
     
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         
-        MyClient newCLient = new MyClient(this);       
+        MyClient newCLient = new MyClient(this);  
+        
+        if(!flag){
+            ipAddress = JOptionPane.showInputDialog("Enter the ip address: ");
+            
+            newCLient.getIP(ipAddress);
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-    
+        
+        flag = true;
         serverThread = new Thread(new Runnable()
         {
             public void run()
@@ -609,16 +610,6 @@ public class MainWindow extends javax.swing.JFrame {
         
         serverThread.start();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
-
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-       
-        try {
-            server.plzClose();
-        } catch (IOException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
-       
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void newWindowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newWindowButtonActionPerformed
         MainWindow MW2 = new MainWindow();
@@ -686,7 +677,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPopupMenu jPopupMenu1;
