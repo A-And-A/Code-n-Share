@@ -129,12 +129,18 @@ class MyClient implements ActionListener
         }
         if(temp == sendCodeButton  )
         {
-            String S = MW.getText();
-            try {
-                dos.writeUTF(MyServer.TO_CHAT+S);
-            } catch (IOException ex) {
-                Logger.getLogger(MyClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            if(s!=null){
+                String S = MW.getText();
+                try {
+                    dos.writeUTF(MyServer.TO_CHAT+S);
+                } catch (IOException ex) {
+                    Logger.getLogger(MyClient.class.getName()).log(Level.SEVERE, null, ex);
+                
+                 }
+            }
+            else
+                JOptionPane.showMessageDialog(chatWindow,"u r not logged in. plz login first"); 
+                
             
         }
         if(temp==loginButton)

@@ -93,7 +93,7 @@ public class MainWindow extends javax.swing.JFrame {
         statusBar.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
         output.setEditable(false);
-        output.setBackground(new java.awt.Color(1, 10, 0));
+        output.setBackground(new java.awt.Color(26, 26, 26));
         output.setColumns(20);
         output.setFont(new java.awt.Font("Lucida Console", 0, 12)); // NOI18N
         output.setForeground(new java.awt.Color(255, 52, 10));
@@ -105,10 +105,12 @@ public class MainWindow extends javax.swing.JFrame {
         jTextField1.setFont(new java.awt.Font("Lucida Fax", 0, 12)); // NOI18N
         jTextField1.setText("Build Output");
 
-        codeArea.setBackground(new java.awt.Color(0, 10, 3));
+        jTabbedPane1.setBackground(new java.awt.Color(204, 204, 255));
+
+        codeArea.setBackground(new java.awt.Color(26, 26, 26));
         codeArea.setColumns(20);
-        codeArea.setFont(new java.awt.Font("Lucida Sans Typewriter", 0, 14)); // NOI18N
-        codeArea.setForeground(new java.awt.Color(64, 255, 56));
+        codeArea.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 14)); // NOI18N
+        codeArea.setForeground(new java.awt.Color(255, 115, 238));
         codeArea.setRows(5);
         codeArea.setCaretColor(new java.awt.Color(51, 255, 0));
         jScrollPane3.setViewportView(codeArea);
@@ -126,9 +128,10 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Main", jPanel1);
 
-        chatArea.setBackground(new java.awt.Color(0, 12, 3));
+        chatArea.setEditable(false);
+        chatArea.setBackground(new java.awt.Color(26, 26, 26));
         chatArea.setColumns(20);
-        chatArea.setFont(new java.awt.Font("Lucida Bright", 0, 13)); // NOI18N
+        chatArea.setFont(new java.awt.Font("Lucida Sans Unicode", 1, 13)); // NOI18N
         chatArea.setForeground(new java.awt.Color(25, 225, 25));
         chatArea.setRows(5);
         chatArea.setCaretColor(new java.awt.Color(51, 255, 0));
@@ -586,7 +589,7 @@ public class MainWindow extends javax.swing.JFrame {
                 
               
                 //to avoid blockage of the main 
-                   server = new MyServer();
+                   server = new MyServer(MainWindow.this);
                    String message = "Server Started "+ (server.getSocket()).toString();
                 
                    if(server!=null)
@@ -609,7 +612,11 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
        
-        
+        try {
+            server.plzClose();
+        } catch (IOException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
        
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
@@ -660,6 +667,10 @@ public class MainWindow extends javax.swing.JFrame {
     public void toChatWindow(String STR)
     {
         chatArea.setText(STR);
+    }
+    public void toStatusBar(String S)
+    {
+        statusBar.setText(S);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

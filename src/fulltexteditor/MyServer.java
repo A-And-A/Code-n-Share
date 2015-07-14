@@ -28,11 +28,11 @@ public class MyServer {
     public final static String TO_CHAT = "@@tochat@@";
     Thread t;
     
-    public MyServer()
+    public MyServer(MainWindow MW)
     {
         try{
 	ss=new ServerSocket(PORT);
-	System.out.println("Server Started "+ss);
+	MW.toStatusBar("Server Started "+ss);
             while(true)
             {
                 s=ss.accept();
@@ -44,9 +44,12 @@ public class MyServer {
     }
     
     
-    void plzClose()
+    public void plzClose() throws IOException
     {
-        
+        ss.close();
+        t.interrupt();
+        ss = null;
+        t = null;
     }
    
     public ServerSocket getSocket()
