@@ -6,7 +6,7 @@
 package fulltexteditor;
 
 /**
- *
+ *hello
  * @author Abhishek
  */
 public class FullTextEditor {
